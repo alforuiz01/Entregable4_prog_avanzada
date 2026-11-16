@@ -1,0 +1,6 @@
+.git
+**/src
+**/target/classes
+**/target/test-classes
+jenkins
+docs

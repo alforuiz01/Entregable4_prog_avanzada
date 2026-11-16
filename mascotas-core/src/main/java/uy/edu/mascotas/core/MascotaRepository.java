@@ -1,0 +1,5 @@
+package uy.edu.mascotas.core;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface MascotaRepository extends JpaRepository<Mascota, Long> { }

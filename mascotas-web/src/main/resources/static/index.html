@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adopcion de mascotas</title>
+<style>
+ body{font-family:system-ui,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;color:#1f2937}
+ form{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.5rem;margin-bottom:1rem}
+ input,select,button{padding:.5rem;font-size:1rem}
+ #lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+ .card{border:1px solid #d1d5db;border-radius:8px;overflow:hidden}
+ .card img{width:100%;height:140px;object-fit:cover}
+ .card div{padding:.5rem}
+</style>
+</head>
+<body>
+<h1>Adopcion de mascotas</h1>
+<h2>Registrar mascota encontrada</h2>
+<form id="alta">
+ <input name="nombre" placeholder="Nombre" required>
+ <select name="especie"><option>PERRO</option><option>GATO</option><option>OTRO</option></select>
+ <select name="genero"><option>MACHO</option><option>HEMBRA</option></select>
+ <input name="edad" type="number" min="0" placeholder="Edad (anios)" required>
+ <input name="fotoUrl" placeholder="URL de la foto">
+ <input name="descripcion" placeholder="Descripcion">
+ <button>Registrar</button>
+</form>
+<h2>Buscar</h2>
+<form id="filtro">
+ <select name="especie"><option value="">Especie</option><option>PERRO</option><option>GATO</option><option>OTRO</option></select>
+ <select name="genero"><option value="">Genero</option><option>MACHO</option><option>HEMBRA</option></select>
+ <input name="edadMin" type="number" min="0" placeholder="Edad min">
+ <input name="edadMax" type="number" min="0" placeholder="Edad max">
+ <button>Buscar</button>
+</form>
+<div id="lista"></div>
+<script>
+const lista = document.getElementById('lista');
+function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
+async function cargar(){
+  const p = new URLSearchParams([...new FormData(document.getElementById('filtro'))].filter(([,v])=>v));
+  const r = await fetch('/api/mascotas?'+p);
+  const ms = await r.json();
+  lista.innerHTML = ms.map(m=>`<div class="card"><img src="${esc(m.fotoUrl)}" alt="${esc(m.nombre)}" onerror="this.src='/img/sin-foto.svg'">
+   <div><b>${esc(m.nombre)}</b><br>${esc(m.especie)} - ${esc(m.genero)} - ${m.edad} anios<br>${esc(m.descripcion)}<br>
+   <button onclick="adoptar(${m.id})">Adoptar</button></div></div>`).join('') || '<p>Sin resultados</p>';
+}
+async function adoptar(id){ await fetch(`/api/mascotas/${id}/adoptar`,{method:'POST'}); cargar(); }
+document.getElementById('filtro').onsubmit = e=>{e.preventDefault();cargar()};
+document.getElementById('alta').onsubmit = async e=>{
+  e.preventDefault();
+  const d = Object.fromEntries(new FormData(e.target)); d.edad = Number(d.edad);
+  const r = await fetch('/api/mascotas',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
+  if(!r.ok){alert((await r.json()).error);return}
+  e.target.reset(); cargar();
+};
+cargar();
+</script>
+</body>
+</html>
