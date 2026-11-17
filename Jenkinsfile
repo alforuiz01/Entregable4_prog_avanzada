@@ -12,7 +12,7 @@ pipeline {
     // pollSCM queda como respaldo si el webhook no llega.
     triggers {
         githubPush()
-        pollSCM('H/5 * * * *')
+        pollSCM('* * * *')
     }
 
     environment {
