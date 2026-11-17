@@ -69,7 +69,7 @@ class MascotaServiceTest {
         Mascota toby = mascota("Toby", Especie.PERRO, Genero.MACHO, 9);
         when(repository.findAll()).thenReturn(List.of(rex, luna, toby));
 
-        assertEquals(99, service.buscar(null, null, null, null).size());
+        assertEquals(3, service.buscar(null, null, null, null).size());
         assertEquals(List.of(rex, toby), service.buscar(Especie.PERRO, null, null, null));
         assertEquals(List.of(luna), service.buscar(null, Genero.HEMBRA, null, null));
         assertEquals(List.of(rex), service.buscar(Especie.PERRO, Genero.MACHO, 0, 5));
