@@ -35,7 +35,6 @@ public class MascotaService {
         return repository.findById(id).orElseThrow(() -> new MascotaNoEncontradaException(id));
     }
 
-    /** Busca mascotas disponibles; cada filtro nulo se ignora. */
     public List<Mascota> buscar(Especie especie, Genero genero, Integer edadMin, Integer edadMax) {
         return repository.findAll().stream()
                 .filter(m -> !m.isAdoptada())

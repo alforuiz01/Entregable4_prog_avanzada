@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-/** Mascota encontrada y registrada para adopcion. */
+
 @Entity
 @Table(name = "mascotas")
 public class Mascota {

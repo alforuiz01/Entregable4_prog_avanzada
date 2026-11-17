@@ -13,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-/** Prueba unitaria del modulo core (repositorio simulado con Mockito). */
 @ExtendWith(MockitoExtension.class)
 class MascotaServiceTest {
 
